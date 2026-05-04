@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel – Student Admission System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --error: #ef4444;
+            --warn: #f59e0b;
+            --info: #3b82f6;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #e5e7eb;
+            --glass: rgba(255, 255, 255, 0.78);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%);
+        }
+
+        /* ── LOGIN ── */
+        #loginPage {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            background: var(--glass);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, .5);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, .07);
+        }
+
+        .login-card h1 {
+            font-size: 1.9rem;
+            text-align: center;
+            margin-bottom: .4rem;
+            background: linear-gradient(to right, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-card p {
+            text-align: center;
+            color: var(--muted);
+            margin-bottom: 2rem;
+        }
+
+        .field {
+            margin-bottom: 1.25rem;
+        }
+
+        .field label {
+            display: block;
+            font-size: .9rem;
+            font-weight: 500;
+            margin-bottom: .4rem;
+            color: var(--text);
+        }
+
+        .field input {
+            width: 100%;
+            padding: .75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            font-size: .97rem;
+            background: rgba(255, 255, 255, .9);
+            outline: none;
+            transition: .2s;
+        }
+
+        .field input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, .1);
+            background: #fff;
+        }
+
+        .error-txt {
+            color: var(--error);
+            font-size: .87rem;
+            margin-top: .4rem;
+            display: none;
+        }
+
+        .btn-primary {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: .9rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -10px var(--primary);
+            transition: .3s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -10px var(--primary);
+        }
+
+        .btn-primary:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .login-link {
+            display: block;
+            text-align: center;
+            margin-top: 1.2rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .login-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ── DASHBOARD ── */
+        #dashPage {
+            display: none;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .dash-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, .45);
+            padding: 1.25rem 2rem;
+            margin-bottom: 1.75rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .04);
+        }
+
+        .dash-header h1 {
+            font-size: 1.35rem;
+            color: var(--text);
+        }
+
+        .dash-header .right {
+            display: flex;
+            gap: .75rem;
+            align-items: center;
+        }
+
+        .btn-sm {
+            padding: .45rem 1.1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: .88rem;
+            font-weight: 500;
+            transition: .2s;
+        }
+
+        .btn-sm:hover {
+            opacity: .88;
+        }
+
+        .btn-danger {
+            background: var(--error);
+            color: #fff;
+        }
+
+        .btn-view {
+            background: var(--info);
+            color: #fff;
+        }
+
+        .btn-edit {
+            background: var(--warn);
+            color: #fff;
+        }
+
+        .btn-del {
+            background: var(--error);
+            color: #fff;
+        }
+
+        .btn-save {
+            background: var(--success);
+            color: #fff;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            flex: 1;
+            min-width: 140px;
+            background: var(--glass);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, .45);
+            border-radius: 14px;
+            padding: 1.1rem 1.5rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, .04);
+        }
+
+        .stat-card .label {
+            font-size: .8rem;
+            color: var(--muted);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: .25rem;
+        }
+
+        /* Search */
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: .65rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: .95rem;
+            background: rgba(255, 255, 255, .9);
+            outline: none;
+            min-width: 200px;
+        }
+
+        .search-bar input:focus {
+            border-color: var(--primary);
+        }
+
+        .search-bar select {
+            padding: .65rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: .95rem;
+            background: rgba(255, 255, 255, .9);
+            outline: none;
+            cursor: pointer;
+        }
+
+        /* Table */
+        .table-wrap {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, .45);
+            border-radius: 16px;
+            overflow-x: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        thead th {
+            background: rgba(79, 70, 229, .09);
+            padding: .9rem 1rem;
+            text-align: left;
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: .8rem 1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, .04);
+            font-size: .9rem;
+            color: var(--text);
+        }
+
+        tbody tr:hover {
+            background: rgba(255, 255, 255, .55);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: .25rem .65rem;
+            border-radius: 20px;
+            font-size: .78rem;
+            font-weight: 600;
+        }
+
+        .badge-joined {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: .4rem;
+            flex-wrap: wrap;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #e5e7eb;
+            display: block;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 3rem;
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        /* ── MODAL ── */
+        .overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            z-index: 500;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 20px;
+            max-width: 680px;
+            width: 100%;
+            max-height: 88vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        #editForm {
+            overflow-y: auto;
+            padding: 2rem;
+        }
+
+        .modal-footer {
+            position: sticky;
+            bottom: 0;
+            background: #fff;
+            padding: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: .75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .modal-head h2 {
+            font-size: 1.3rem;
+            color: var(--text);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--muted);
+            line-height: 1;
+        }
+
+        .close-btn:hover {
+            color: var(--error);
+        }
+
+        /* View modal */
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .detail-item strong {
+            display: block;
+            font-size: .78rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            margin-bottom: .2rem;
+        }
+
+        .detail-item span {
+            font-size: .95rem;
+            color: var(--text);
+        }
+
+        .detail-photo {
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .detail-photo img {
+            width: 90px;
+            height: 90px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 3px solid var(--border);
+        }
+
+        .section-divider {
+            grid-column: 1/-1;
+            font-size: .85rem;
+            font-weight: 600;
+            color: var(--primary);
+            padding: .6rem 0 .2rem;
+            border-bottom: 1px dashed rgba(79, 70, 229, .25);
+            margin-bottom: .25rem;
+        }
+
+        /* Edit modal */
+        .edit-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .edit-field {
+            display: flex;
+            flex-direction: column;
+            gap: .35rem;
+        }
+
+        .edit-field.full {
+            grid-column: 1/-1;
+        }
+
+        .edit-field label {
+            font-size: .85rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .edit-field input,
+        .edit-field select,
+        .edit-field textarea {
+            padding: .65rem .85rem;
+            border: 1px solid var(--border);
+            border-radius: 9px;
+            font-size: .93rem;
+            color: var(--text);
+            background: #f9fafb;
+            outline: none;
+            transition: .2s;
+        }
+
+        .edit-field input:focus,
+        .edit-field select:focus,
+        .edit-field textarea:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, .09);
+        }
+
+        .edit-field textarea {
+            resize: vertical;
+            min-height: 65px;
+        }
+
+        .modal-footer {
+            margin-top: 1.5rem;
+            display: flex;
+            gap: .75rem;
+            justify-content: flex-end;
+        }
+
+        .btn-cancel {
+            background: #f3f4f6;
+            color: var(--text);
+            padding: .6rem 1.4rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-cancel:hover {
+            background: #e5e7eb;
+        }
+
+        /* Edit section header */
+        .edit-section-label {
+            grid-column: 1/-1;
+            font-size: .82rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            padding: .5rem 0 .25rem;
+            border-bottom: 1px dashed rgba(79, 70, 229, .25);
+            margin-top: .5rem;
+        }
+
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            display: none;
+            max-width: 380px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+            animation: slideIn .3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-ok {
+            background: #ecfdf5;
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+        }
+
+        .toast-err {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+
+        @media(max-width:600px) {
+
+            .detail-grid,
+            .edit-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .dash-header {
+                flex-direction: column;
+                gap: .75rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="toast"></div>
+
+    <!-- ═══════ LOGIN PAGE ═══════ -->
+    <div id="loginPage">
+        <div class="login-card">
+            <h1>Admin Login</h1>
+            <p>Enter your credentials to access the admin panel</p>
+            <form id="loginForm">
+                <div class="field">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="admin" required>
+                </div>
+                <div class="field">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <div class="error-txt" id="loginErr">Invalid username or password</div>
+                <button type="submit" class="btn-primary" id="loginBtn">Login</button>
+            </form>
+            <a href="admission.html" class="login-link">← Back to Admission Form</a>
+        </div>
+    </div>
+
+    <!-- ═══════ DASHBOARD PAGE ═══════ -->
+    <div id="dashPage">
+        <div class="dash-header">
+            <h1>🎓 Student Management System</h1>
+            <div class="right">
+                <span id="adminName" style="color:var(--muted);font-size:.9rem;"></span>
+                <a href="admission.html" class="btn-sm" style="background:#ede9fe;color:var(--primary);">+ New
+                    Admission</a>
+                <button class="btn-sm btn-danger" onclick="logout()">Logout</button>
+            </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="label">Total Students</div>
+                <div class="value" id="statTotal">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Joined</div>
+                <div class="value" id="statJoined" style="color:#10b981;">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Pending</div>
+                <div class="value" id="statPending" style="color:#f59e0b;">-</div>
+            </div>
+            <div class="stat-card">
+                <div class="label">Qualified</div>
+                <div class="value" id="statQual" style="color:#3b82f6;">-</div>
+            </div>
+        </div>
+
+        <!-- Search -->
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍  Search by name, admission no, class…"
+                oninput="filterTable()">
+            <select id="statusFilter" onchange="filterTable()">
+                <option value="">All Statuses</option>
+                <option value="Joined">Joined</option>
+                <option value="Pending">Pending</option>
+            </select>
+            <select id="classFilter" onchange="filterTable()">
+                <option value="">All Classes</option>
+            </select>
+        </div>
+
+        <!-- Table -->
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Adm No.</th>
+                        <th>Name</th>
+                        <th>Class</th>
+                        <th>Gender</th>
+                        <th>Contact</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody">
+                    <tr>
+                        <td colspan="8" class="no-data">Loading…</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ═══════ VIEW MODAL ═══════ -->
+    <div class="overlay" id="viewOverlay">
+        <div class="modal">
+            <div class="modal-head">
+                <h2>Student Details</h2>
+                <button class="close-btn" onclick="closeModal('viewOverlay')">×</button>
+            </div>
+            <div class="detail-photo"><img id="viewPhoto" src="" alt="Photo"></div>
+            <div class="detail-grid" id="viewGrid"></div>
+        </div>
+    </div>
+
+    <!-- ═══════ EDIT MODAL ═══════ -->
+    <div class="overlay" id="editOverlay">
+        <div class="modal">
+            <div class="modal-head">
+                <h2>Edit Student</h2>
+                <button class="close-btn" onclick="closeModal('editOverlay')">×</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="editId">
+                <div class="edit-grid">
+                    <!-- Personal -->
+                    <div class="edit-section-label">Personal Information</div>
+                    <div class="edit-field"><label>First Name *</label><input id="eFirstName" required></div>
+                    <div class="edit-field"><label>Last Name *</label><input id="eLastName" required></div>
+                    <div class="edit-field"><label>Date of Birth *</label><input type="date" id="eDob" required></div>
+                    <div class="edit-field">
+                        <label>Gender *</label>
+                        <select id="eGender" required>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="edit-field"><label>Aadhaar</label><input id="eAadhaar" maxlength="12"></div>
+                    <div class="edit-field">
+                        <label>Blood Group</label>
+                        <select id="eBloodGroup">
+                            <option value="">—</option>
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                        </select>
+                    </div>
+                    <div class="edit-field"><label>Religion</label><input id="eReligion"></div>
+                    <div class="edit-field"><label>Caste</label><input id="eCaste"></div>
+                    <div class="edit-field"><label>Mother Tongue</label><input id="eMotherTongue"></div>
+                    <div class="edit-field full"><label>Identification Marks</label><textarea id="eIdMarks"></textarea>
+                    </div>
+
+                    <!-- Parent -->
+                    <div class="edit-section-label">Parent / Guardian</div>
+                    <div class="edit-field"><label>Father's Name</label><input id="eFather"></div>
+                    <div class="edit-field"><label>Mother's Name</label><input id="eMother"></div>
+                    <div class="edit-field"><label>Contact Number *</label><input id="eContact" required></div>
+                    <div class="edit-field"><label>Alternative Number</label><input id="eAlt"></div>
+                    <div class="edit-field"><label>Parent Occupation</label><input id="eOccupation"></div>
+                    <div class="edit-field full"><label>Present Address</label><textarea id="ePresent"></textarea></div>
+                    <div class="edit-field full"><label>Permanent Address</label><textarea id="ePermanent"></textarea>
+                    </div>
+
+                    <!-- Academic -->
+                    <div class="edit-section-label">Academic</div>
+
+                    <!-- ✅ Admission Number Added -->
+                    <div class="edit-field">
+                        <label>Admission Number *</label>
+                        <input id="eAdmissionNo" required>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Admitted Class *</label>
+                        <input id="eClass" required>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Last School</label>
+                        <input id="eLastSchool">
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Previous Board</label>
+                        <select id="ePrevBoard">
+                            <option value="">—</option>
+                            <option>SSC</option>
+                            <option>CBSE</option>
+                            <option>ICSE</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>First Language</label>
+                        <select id="eFirstLang">
+                            <option value="">—</option>
+                            <option>English</option>
+                            <option>Telugu</option>
+                            <option>Hindi</option>
+                            <option>Tamil</option>
+                            <option>Kannada</option>
+                            <option>Malayalam</option>
+                            <option>Marathi</option>
+                            <option>Bengali</option>
+                            <option>Gujarati</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Second Language</label>
+                        <select id="eSecondLang">
+                            <option value="">—</option>
+                            <option>English</option>
+                            <option>Telugu</option>
+                            <option>Hindi</option>
+                            <option>Tamil</option>
+                            <option>Kannada</option>
+                            <option>Malayalam</option>
+                            <option>Marathi</option>
+                            <option>Bengali</option>
+                            <option>Gujarati</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Admission Status</label>
+                        <select id="eStatus">
+                            <option value="Pending">Pending</option>
+                            <option value="Joined">Joined</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Test Status</label>
+                        <select id="eTestStatus">
+                            <option value="Not Qualified">Not Qualified</option>
+                            <option value="Qualified">Qualified</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Test Performance</label>
+                        <select id="eTestPerf">
+                            <option value="">—</option>
+                            <option>Excellent</option>
+                            <option>Good</option>
+                            <option>Average</option>
+                        </select>
+                    </div>
+
+                    <!-- ✅ Health Section -->
+                    <div class="edit-section-label">Health</div>
+
+                    <div class="edit-field">
+                        <label>Height (cm)</label>
+                        <input type="number" id="eHeight">
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Weight (kg)</label>
+                        <input type="number" id="eWeight">
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Health Problem</label>
+                        <select id="eHealthProblem">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-field full">
+                        <label>Health Details</label>
+                        <textarea id="eHealthDetails"></textarea>
+                    </div>
+
+                    <div class="edit-field">
+                        <label>Physically Disabled</label>
+                        <select id="eDisabled">
+                            <option value="No">No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="edit-field full">
+                        <label>Disability Details</label>
+                        <textarea id="eDisabilityDetails"></textarea>
+                    </div>
+                </div> <!-- close edit-grid -->
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal('editOverlay')">Cancel</button>
+                    <button type="submit" id="editSaveBtn" class="btn-sm btn-save">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        // ── Use this exact block ──
+        // Replace 10.20.66.143 with YOUR PC's IPv4 address from ipconfig if different
+
+        const hostname = window.location.hostname;
+
+        const API =
+            window.location.protocol.startsWith('http')
+                ? `http://${hostname}:8000`
+                : 'http://10.20.66.148:8000';
+
+        let allStudents = [];
+
+
+
+
+
+        // ── Toast ──
+        function toast(msg, ok = true) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = ok ? 'toast-ok' : 'toast-err';
+            t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 4500);
+        }
+
+        // ── Modal helpers ──
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+        window.addEventListener('click', e => {
+            ['viewOverlay', 'editOverlay'].forEach(id => {
+                if (e.target.id === id) closeModal(id);
+            });
+        });
+
+        // ── Auth ──
+        if (localStorage.getItem('adminLoggedIn') === 'true') showDash();
+
+        document.getElementById('loginForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            btn.disabled = true; btn.textContent = 'Logging in…';
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            try {
+                const res = await fetch(`${API}/admin/login/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                if (res.ok) {
+                    localStorage.setItem('adminLoggedIn', 'true');
+                    localStorage.setItem('adminUser', username);
+                    showDash();
+                } else {
+                    document.getElementById('loginErr').style.display = 'block';
+                }
+            } catch {
+                toast('Cannot connect to server. Make sure backend is running.', false);
+            } finally {
+                btn.disabled = false; btn.textContent = 'Login';
+            }
+        });
+
+        function showDash() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('dashPage').style.display = 'block';
+            document.getElementById('adminName').textContent = '👤 ' + (localStorage.getItem('adminUser') || 'Admin');
+            loadStudents();
+        }
+
+        function logout() {
+            localStorage.removeItem('adminLoggedIn');
+            localStorage.removeItem('adminUser');
+            location.reload();
+        }
+
+        // ── Load students ──
+        async function loadStudents() {
+            try {
+                const res = await fetch(`${API}/admin/students/`);
+
+                if (!res.ok) {
+                    throw new Error("Server error");
+                }
+
+                const result = await res.json();
+
+                console.log("DATA:", result); // debug
+
+                // ✅ IMPORTANT FIX
+                if (result && result.data) {
+                    allStudents = result.data;
+                } else if (Array.isArray(result)) {
+                    allStudents = result;
+                } else {
+                    allStudents = [];
+                }
+
+                renderStats(allStudents);
+                populateFilters(allStudents);
+                renderTable(allStudents);
+
+            } catch (err) {
+                console.error(err);
+
+                document.getElementById('tbody').innerHTML =
+                    `<tr><td colspan="8" class="no-data">
+                ⚠️ Failed to load students. Check console (F12)
+             </td></tr>`;
+            }
+        }
+
+        function renderStats(students) {
+            document.getElementById('statTotal').textContent = students.length;
+            document.getElementById('statJoined').textContent = students.filter(s => s.admission_status === 'Joined').length;
+            document.getElementById('statPending').textContent = students.filter(s => s.admission_status === 'Pending').length;
+            document.getElementById('statQual').textContent = students.filter(s => s.test_status === 'Qualified').length;
+        }
+
+        function populateFilters(students) {
+            const classSet = [...new Set(students.map(s => s.admitted_class).filter(Boolean))].sort();
+            const cf = document.getElementById('classFilter');
+            cf.innerHTML = '<option value="">All Classes</option>';
+            classSet.forEach(c => { const o = document.createElement('option'); o.value = c; o.textContent = c; cf.appendChild(o); });
+        }
+
+        function filterTable() {
+            const q = document.getElementById('searchInput').value.toLowerCase();
+            const st = document.getElementById('statusFilter').value;
+            const cl = document.getElementById('classFilter').value;
+            const filtered = allStudents.filter(s => {
+                const name = `${s.first_name} ${s.last_name}`.toLowerCase();
+                const matchQ = !q || name.includes(q) || (s.admission_number || '').toLowerCase().includes(q) || (s.admitted_class || '').toLowerCase().includes(q);
+                const matchSt = !st || s.admission_status === st;
+                const matchCl = !cl || s.admitted_class === cl;
+                return matchQ && matchSt && matchCl;
+            });
+            renderTable(filtered);
+        }
+
+        function renderTable(students) {
+            const tbody = document.getElementById('tbody');
+
+            if (!students.length) {
+                tbody.innerHTML = '<tr><td colspan="8" class="no-data">No students found</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = students.map(s => {
+                const photoSrc = s.photo_path
+                    ? `${API}/${s.photo_path.replace(/\\/g, '/')}`
+                    : '';
+
+                const fullName = (s.first_name || '') +
+                    (s.last_name && !s.first_name.includes(s.last_name.trim())
+                        ? ' ' + s.last_name
+                        : '');
+
+                const badge = s.admission_status === 'Joined'
+                    ? `<span class="badge badge-joined">Joined</span>`
+                    : `<span class="badge badge-pending">Pending</span>`;
+
+                return `
+        <tr>
+            <td><img src="${photoSrc}" class="avatar"></td>
+            <td>${s.admission_number || '-'}</td>
+            <td>${fullName}</td>
+            <td>${s.admitted_class || '-'}</td>
+            <td>${s.gender || '-'}</td>
+            <td>${s.contact_number || '-'}</td>
+            <td>${badge}</td>
+            <td class="actions-cell">
+                <button class="btn-sm btn-view" onclick="viewStudent(${s.id})">View</button>
+                <button class="btn-sm btn-edit" onclick="editStudent(${s.id})">Edit</button>
+                <button class="btn-sm btn-del" onclick="deleteStudent(${s.id}, '${fullName}')">Delete</button>
+            </td>
+        </tr>
+        `;
+            }).join('');
+        }
+
+        // ── View ── FIX: was /admin/students/${id}, correct route is /admin/student/${id}
+        async function viewStudent(id) {
+            try {
+                const res = await fetch(`${API}/admin/student/${id}`);
+                const result = await res.json();
+                const s = result.data || result;
+                const photoSrc = s.photo_path
+                    ? `${API}/${s.photo_path.replace(/\\/g, '/')}`
+                    : `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Crect fill='%23e5e7eb' width='90' height='90' rx='12'/%3E%3Ctext fill='%236b7280' font-size='11' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3ENo Photo%3C/text%3E%3C/svg%3E`;
+                document.getElementById('viewPhoto').src = photoSrc;
+
+                const def = v => v || '—';
+                document.getElementById('viewGrid').innerHTML = `
+                    <div class="section-divider">Personal Information</div>
+                    <div class="detail-item"><strong>Admission No.</strong><span>${def(s.admission_number)}</span></div>
+                    <div class="detail-item"><strong>Full Name</strong><span>${def(s.first_name)} ${def(s.last_name)}</span></div>
+                    <div class="detail-item"><strong>Date of Birth</strong><span>${def(s.dob)}</span></div>
+                    <div class="detail-item"><strong>Gender</strong><span>${def(s.gender)}</span></div>
+                    <div class="detail-item"><strong>Aadhaar</strong><span>${def(s.aadhaar)}</span></div>
+                    <div class="detail-item"><strong>Blood Group</strong><span>${def(s.blood_group)}</span></div>
+                    <div class="detail-item"><strong>Religion</strong><span>${def(s.religion)}</span></div>
+                    <div class="detail-item"><strong>Caste</strong><span>${def(s.caste)}</span></div>
+                    <div class="detail-item"><strong>Mother Tongue</strong><span>${def(s.mother_tongue)}</span></div>
+                    <div class="detail-item"><strong>Identification Marks</strong><span>${def(s.identification_marks)}</span></div>
+                    <div class="section-divider">Parent / Guardian</div>
+                    <div class="detail-item"><strong>Father's Name</strong><span>${def(s.father_name)}</span></div>
+                    <div class="detail-item"><strong>Mother's Name</strong><span>${def(s.mother_name)}</span></div>
+                    <div class="detail-item"><strong>Contact Number</strong><span>${def(s.contact_number)}</span></div>
+                    <div class="detail-item"><strong>Alternative Number</strong><span>${def(s.alternative_number)}</span></div>
+                    <div class="detail-item"><strong>Occupation</strong><span>${def(s.parent_occupation)}</span></div>
+                    <div class="detail-item"><strong>Present Address</strong><span>${def(s.present_address)}</span></div>
+                    <div class="detail-item"><strong>Permanent Address</strong><span>${def(s.permanent_address)}</span></div>
+                    <div class="section-divider">Academic</div>
+                    <div class="detail-item"><strong>Admitted Class</strong><span>${def(s.admitted_class)}</span></div>
+                    <div class="detail-item"><strong>Admission Type</strong><span>${def(s.admission_type)}</span></div>
+                    <div class="detail-item"><strong>Admission Date</strong><span>${def(s.admission_date)}</span></div>
+                    <div class="detail-item"><strong>Last School</strong><span>${def(s.last_school)}</span></div>
+                    <div class="detail-item"><strong>Previous Board</strong><span>${def(s.previous_board)}</span></div>
+                    <div class="detail-item"><strong>First Language</strong><span>${def(s.first_language)}</span></div>
+                    <div class="detail-item"><strong>Second Language</strong><span>${def(s.second_language)}</span></div>
+                    <div class="detail-item"><strong>Test Status</strong><span>${def(s.test_status)}</span></div>
+                    <div class="detail-item"><strong>Test Performance</strong><span>${def(s.test_performance)}</span></div>
+                    <div class="detail-item"><strong>Admission Status</strong><span>${def(s.admission_status)}</span></div>
+                    <div class="section-divider">Health</div>
+                    <div class="detail-item"><strong>Height (cm)</strong><span>${def(s.height)}</span></div>
+                    <div class="detail-item"><strong>Weight (kg)</strong><span>${def(s.weight)}</span></div>
+                    <div class="detail-item"><strong>Health Problem</strong><span>${def(s.health_problem)}</span></div>
+                    <div class="detail-item"><strong>Health Details</strong><span>${def(s.health_issue_details)}</span></div>
+                    <div class="detail-item"><strong>Physically Disabled</strong><span>${def(s.physically_disabled)}</span></div>
+                    <div class="detail-item"><strong>Disability Details</strong><span>${def(s.disability_details)}</span></div>
+                    <div class="detail-item">
+<strong>Admission Type</strong>
+<span>${def(s.admission_type)}</span>
+</div>
+                `;
+                document.getElementById('viewOverlay').classList.add('active');
+            } catch {
+                toast('Failed to load student details', false);
+            }
+        }
+
+        // ── Edit ── FIX: same route fix + load ALL fields
+        async function editStudent(id) {
+            try {
+                const res = await fetch(`${API}/admin/student/${id}`);
+                const result = await res.json();
+                const s = result.data || result;
+                document.getElementById('editId').value = s.id;
+                document.getElementById('eFirstName').value = s.first_name || '';
+                document.getElementById('eLastName').value = s.last_name || '';
+                document.getElementById('eDob').value = s.dob || '';
+                document.getElementById('eGender').value = s.gender || 'Male';
+                document.getElementById('eAadhaar').value = s.aadhaar || '';
+                document.getElementById('eBloodGroup').value = s.blood_group || '';
+                document.getElementById('eReligion').value = s.religion || '';
+                document.getElementById('eCaste').value = s.caste || '';
+                document.getElementById('eMotherTongue').value = s.mother_tongue || '';
+                document.getElementById('eIdMarks').value = s.identification_marks || '';
+                document.getElementById('eFather').value = s.father_name || '';
+                document.getElementById('eMother').value = s.mother_name || '';
+                document.getElementById('eContact').value = s.contact_number || '';
+                document.getElementById('eAlt').value = s.alternative_number || '';
+                document.getElementById('eOccupation').value = s.parent_occupation || '';
+                document.getElementById('ePresent').value = s.present_address || '';
+                document.getElementById('ePermanent').value = s.permanent_address || '';
+                document.getElementById('eClass').value = s.admitted_class || '';
+                document.getElementById('eLastSchool').value = s.last_school || '';
+                document.getElementById('ePrevBoard').value = s.previous_board || '';
+                document.getElementById('eFirstLang').value = s.first_language || '';
+                document.getElementById('eSecondLang').value = s.second_language || '';
+                document.getElementById('eStatus').value = s.admission_status || 'Pending';
+                document.getElementById('eTestStatus').value = s.test_status || 'Not Qualified';
+                document.getElementById('eTestPerf').value = s.test_performance || '';
+                document.getElementById('eHeight').value = s.height || '';
+                document.getElementById('eWeight').value = s.weight || '';
+                document.getElementById('eHealthProblem').value = s.health_problem || 'No';
+                document.getElementById('eHealthDetails').value = s.health_issue_details || '';
+                document.getElementById('eDisabled').value = s.physically_disabled || 'No';
+                document.getElementById('eDisabilityDetails').value = s.disability_details || '';
+                document.getElementById('eAdmissionNo').value = s.admission_number || '';
+
+                toggleAdmissionNumber(); // update visibility based on status
+
+                document.getElementById('editOverlay').classList.add('active');
+            } catch {
+                toast('Failed to load student data', false);
+            }
+        }
+
+        function toggleAdmissionNumber() {
+            const status = document.getElementById('eStatus').value;
+            const admNoField = document.getElementById('eAdmissionNo');
+            const admNoContainer = admNoField.closest('.edit-field');
+            if (status === 'Pending') {
+                admNoField.value = '';
+                admNoField.removeAttribute('required');
+                admNoContainer.style.display = 'none';
+            } else {
+                admNoField.setAttribute('required', 'required');
+                admNoContainer.style.display = 'block';
+            }
+        }
+
+        document.getElementById('eStatus').addEventListener('change', toggleAdmissionNumber);
+
+        // ── Save edit ── FIX: send ALL fields
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('editId').value;
+            const btn = document.getElementById('editSaveBtn');
+
+            // Button loading state
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+            const fd = new FormData();
+            fd.append('admission_number', document.getElementById('eAdmissionNo').value);
+            fd.append('first_name', document.getElementById('eFirstName').value);
+            fd.append('last_name', document.getElementById('eLastName').value);
+            fd.append('dob', document.getElementById('eDob').value);
+            fd.append('gender', document.getElementById('eGender').value);
+            fd.append('aadhaar', document.getElementById('eAadhaar').value);
+            fd.append('blood_group', document.getElementById('eBloodGroup').value);
+            fd.append('religion', document.getElementById('eReligion').value);
+            fd.append('caste', document.getElementById('eCaste').value);
+            fd.append('mother_tongue', document.getElementById('eMotherTongue').value);
+            fd.append('identification_marks', document.getElementById('eIdMarks').value);
+            fd.append('father_name', document.getElementById('eFather').value);
+            fd.append('mother_name', document.getElementById('eMother').value);
+            fd.append('contact_number', document.getElementById('eContact').value);
+            fd.append('alternative_number', document.getElementById('eAlt').value);
+            fd.append('parent_occupation', document.getElementById('eOccupation').value);
+            fd.append('present_address', document.getElementById('ePresent').value);
+            fd.append('permanent_address', document.getElementById('ePermanent').value);
+            fd.append('admitted_class', document.getElementById('eClass').value);
+            fd.append('last_school', document.getElementById('eLastSchool').value);
+            fd.append('previous_board', document.getElementById('ePrevBoard').value);
+            fd.append('first_language', document.getElementById('eFirstLang').value);
+            fd.append('second_language', document.getElementById('eSecondLang').value);
+            fd.append('admission_status', document.getElementById('eStatus').value);
+            fd.append('test_status', document.getElementById('eTestStatus').value);
+            fd.append('test_performance', document.getElementById('eTestPerf').value);
+            fd.append('height', document.getElementById('eHeight').value);
+            fd.append('weight', document.getElementById('eWeight').value);
+            fd.append('health_problem', document.getElementById('eHealthProblem').value);
+            fd.append('health_issue_details', document.getElementById('eHealthDetails').value);
+            fd.append('physically_disabled', document.getElementById('eDisabled').value);
+            fd.append('disability_details', document.getElementById('eDisabilityDetails').value);
+
+            try {
+                const res = await fetch(`${API}/admin/update/${id}`, {
+                    method: 'PUT',
+                    body: fd
+                });
+
+                if (res.ok) {
+                    // ✅ SUCCESS MESSAGE
+                    toast('✅ Student updated successfully!');
+
+                    // Close modal
+                    document.getElementById('editOverlay').classList.remove('active');
+
+                    // Reload table
+                    loadStudents();
+                } else {
+                    const err = await res.json();
+                    toast('❌ ' + (err.detail || 'Update failed'), false);
+                }
+
+            } catch (error) {
+                toast('⚠️ Cannot connect to server', false);
+            }
+
+            // Reset button
+            btn.disabled = false;
+            btn.textContent = 'Save Changes';
+        });
+
+        // ── Delete ──
+        async function deleteStudent(id, name) {
+            if (!confirm(`Are you sure you want to delete ${name}?\nThis action cannot be undone.`)) return;
+            try {
+                const res = await fetch(`${API}/admin/delete/${id}`, { method: 'DELETE' });
+                if (res.ok) {
+                    toast(`🗑️ ${name} deleted successfully.`);
+                    loadStudents();
+                } else {
+                    toast('Failed to delete student', false);
+                }
+            } catch {
+                toast('Cannot connect to server', false);
+            }
+        }
+    </script>
+</body>
+
+</html>
