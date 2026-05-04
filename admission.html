@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Admission Form</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --primary-hover: #4338ca;
+            --success: #10b981;
+            --error: #ef4444;
+            --text: #1f2937;
+            --muted: #6b7280;
+            --border: #d1d5db;
+            --glass: rgba(255, 255, 255, 0.75);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f3e7e9 0%, #e3eeff 100%);
+            padding: 2rem 1rem;
+            display: flex;
+            justify-content: center;
+        }
+
+        .blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(70px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .blob1 {
+            width: 350px;
+            height: 350px;
+            background: linear-gradient(#ff9a9e, #fecfef);
+            top: 5%;
+            left: 8%;
+            animation: float 9s ease-in-out infinite alternate;
+        }
+
+        .blob2 {
+            width: 420px;
+            height: 420px;
+            background: linear-gradient(#a1c4fd, #c2e9fb);
+            bottom: 5%;
+            right: 5%;
+            animation: float 11s ease-in-out infinite alternate-reverse;
+        }
+
+        @keyframes float {
+            to {
+                transform: translateY(40px) scale(1.08);
+            }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 920px;
+            z-index: 1;
+            background: var(--glass);
+            backdrop-filter: blur(18px);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.07);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .form-header h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            background: linear-gradient(to right, #4f46e5, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-header p {
+            color: var(--muted);
+            margin-top: .5rem;
+            font-size: 1.05rem;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            border-bottom: 2px solid rgba(79, 70, 229, 0.2);
+            padding-bottom: .6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: .4rem;
+        }
+
+        label {
+            font-size: .9rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        input[type=text],
+        input[type=number],
+        input[type=date],
+        input[type=tel],
+        select,
+        textarea {
+            padding: .75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: .97rem;
+            color: var(--text);
+            outline: none;
+            transition: border .2s, box-shadow .2s;
+            width: 100%;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, .1);
+            background: #fff;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 70px;
+        }
+
+        .radio-row {
+            display: flex;
+            gap: 1.5rem;
+            padding: .4rem 0;
+            flex-wrap: wrap;
+        }
+
+        .radio-label {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+            cursor: pointer;
+        }
+
+        .radio-label input[type=radio] {
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+            transition: .2s;
+        }
+
+        .radio-label input[type=radio]:checked {
+            border-color: var(--primary);
+        }
+
+        .radio-label input[type=radio]:checked::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--primary);
+        }
+
+        input[type=file] {
+            padding: .55rem;
+            border: 1.5px dashed var(--primary);
+            border-radius: 10px;
+            background: transparent;
+            cursor: pointer;
+        }
+
+        input[type=file]::-webkit-file-upload-button {
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            padding: .4rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: .8rem;
+            font-weight: 500;
+        }
+
+        .actions {
+            text-align: center;
+            margin-top: 2.5rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 1rem 3.5rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px -10px var(--primary);
+            transition: .3s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 25px -10px var(--primary);
+        }
+
+        .submit-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 9999;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 500;
+            max-width: 360px;
+            display: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+            animation: slideIn .3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .toast-success {
+            background: #ecfdf5;
+            border: 1px solid #6ee7b7;
+            color: #065f46;
+        }
+
+        .toast-error {
+            background: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+        }
+
+        @media(max-width:600px) {
+            .container {
+                padding: 1.5rem 1rem;
+            }
+
+            .form-header h1 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="blob blob1"></div>
+    <div class="blob blob2"></div>
+    <div id="toast"></div>
+
+    <div class="container">
+        <div class="form-header">
+            <h1>Student Admission Form</h1>
+            <p>Fill in all required fields (*) to complete the admission process.</p>
+        </div>
+
+        <form id="admissionForm">
+
+            <!-- General Info -->
+            <div class="section">
+                <h2>General Information</h2>
+                <div class="grid">
+                    <div class="field">
+                        <label>Admission Type *</label>
+                        <div class="radio-row">
+                            <label class="radio-label">
+                                <input type="radio" name="admission_type" value="New Joiner Admission" checked required>
+                                <span>New Joiner</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="admission_type" value="Transfer">
+                                <span>Transfer</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label for="photo">Student Photo *</label>
+                        <input type="file" id="photo" name="photo" accept="image/*" required>
+                    </div>
+                    <div class="field">
+                        <label for="admission_number">Admission Number *</label>
+                        <input type="text" id="admission_number" name="admission_number" required
+                            placeholder="e.g. ADM-2025-0001">
+                    </div>
+                    <div class="field">
+                        <label for="admission_date">Admission Date</label>
+                        <input type="date" id="admission_date" name="admission_date">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Info -->
+            <div class="section">
+                <h2>Student Information</h2>
+                <div class="grid">
+                    <div class="field">
+                        <label for="first_name">First Name *</label>
+                        <input type="text" id="first_name" name="first_name" required placeholder="Enter first name">
+                    </div>
+                    <div class="field">
+                        <label for="last_name">Last Name *</label>
+                        <input type="text" id="last_name" name="last_name" required placeholder="Enter last name">
+                    </div>
+                    <div class="field">
+                        <label for="dob">Date of Birth *</label>
+                        <input type="date" id="dob" name="dob" required>
+                    </div>
+                    <div class="field">
+                        <label for="gender">Gender *</label>
+                        <select id="gender" name="gender" required>
+                            <option value="" disabled selected>Select Gender</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="aadhaar">Aadhaar Number * (12 digits)</label>
+                        <input type="text" id="aadhaar" name="aadhaar" required placeholder="123456789012"
+                            maxlength="12">
+                    </div>
+                    <div class="field">
+                        <label for="blood_group">Blood Group</label>
+                        <select id="blood_group" name="blood_group">
+                            <option value="">Select Blood Group</option>
+                            <option>A+</option>
+                            <option>A-</option>
+                            <option>B+</option>
+                            <option>B-</option>
+                            <option>O+</option>
+                            <option>O-</option>
+                            <option>AB+</option>
+                            <option>AB-</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="religion">Religion</label>
+                        <input type="text" id="religion" name="religion" placeholder="e.g. Hindu, Muslim…">
+                    </div>
+                    <div class="field">
+                        <label for="caste">Caste</label>
+                        <input type="text" id="caste" name="caste" placeholder="e.g. General, OC, BC…">
+                    </div>
+                    <div class="field">
+                        <label for="mother_tongue">Mother Tongue *</label>
+                        <input type="text" id="mother_tongue" name="mother_tongue" required
+                            placeholder="e.g. Telugu, Hindi…">
+                    </div>
+                    <div class="field full">
+                        <label for="identification_marks">Identification Marks</label>
+                        <textarea id="identification_marks" name="identification_marks"
+                            placeholder="Any visible identification marks…"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Parent Info -->
+            <div class="section">
+                <h2>Parent / Guardian Information</h2>
+                <div class="grid">
+                    <div class="field">
+                        <label for="father_name">Father's Name *</label>
+                        <input type="text" id="father_name" name="father_name" required>
+                    </div>
+                    <div class="field">
+                        <label for="mother_name">Mother's Name *</label>
+                        <input type="text" id="mother_name" name="mother_name" required>
+                    </div>
+                    <div class="field">
+                        <label for="contact_number">Contact Number *</label>
+                        <input type="tel" id="contact_number" name="contact_number" required
+                            placeholder="Primary mobile">
+                    </div>
+                    <div class="field">
+                        <label for="alternative_number">Alternative Number</label>
+                        <input type="tel" id="alternative_number" name="alternative_number"
+                            placeholder="Secondary mobile">
+                    </div>
+                    <div class="field">
+                        <label for="parent_occupation">Parent Occupation</label>
+                        <input type="text" id="parent_occupation" name="parent_occupation">
+                    </div>
+                    <div class="field full">
+                        <label for="present_address">Present Address *</label>
+                        <textarea id="present_address" name="present_address" required></textarea>
+                    </div>
+                    <div class="field full">
+                        <label for="permanent_address">Permanent Address *</label>
+                        <textarea id="permanent_address" name="permanent_address" required></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Academic Info -->
+            <div class="section">
+                <h2>Academic Information</h2>
+                <div class="grid">
+                    <div class="field">
+                        <label for="last_school">Last School Name</label>
+                        <input type="text" id="last_school" name="last_school">
+                    </div>
+                    <div class="field">
+                        <label for="previous_board">Previous Board</label>
+                        <select id="previous_board" name="previous_board">
+                            <option value="">Select Board</option>
+                            <option>SSC</option>
+                            <option>CBSE</option>
+                            <option>ICSE</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="admitted_class">Admitted Class *</label>
+                        <input type="text" id="admitted_class" name="admitted_class" required
+                            placeholder="e.g. 6th Class">
+                    </div>
+                    <div class="field">
+                        <label for="first_language">First Language *</label>
+                        <select id="first_language" name="first_language" required>
+                            <option value="" disabled selected>Select</option>
+                            <option>English</option>
+                            <option>Telugu</option>
+                            <option>Hindi</option>
+                            <option>Tamil</option>
+                            <option>Kannada</option>
+                            <option>Malayalam</option>
+                            <option>Marathi</option>
+                            <option>Bengali</option>
+                            <option>Gujarati</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="second_language">Second Language *</label>
+                        <select id="second_language" name="second_language" required>
+                            <option value="" disabled selected>Select</option>
+                            <option>English</option>
+                            <option>Telugu</option>
+                            <option>Hindi</option>
+                            <option>Tamil</option>
+                            <option>Kannada</option>
+                            <option>Malayalam</option>
+                            <option>Marathi</option>
+                            <option>Bengali</option>
+                            <option>Gujarati</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="test_status">Entrance Test Status</label>
+                        <select id="test_status" name="test_status">
+                            <option value="Not Qualified" selected>Not Qualified</option>
+                            <option value="Qualified">Qualified</option>
+                        </select>
+                    </div>
+                    <div class="field" id="testPerfField" style="display:none;">
+                        <label for="test_performance">Test Performance</label>
+                        <select id="test_performance" name="test_performance">
+                            <option value="" disabled selected>Select</option>
+                            <option>Excellent</option>
+                            <option>Good</option>
+                            <option>Average</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="admission_status">Admission Status</label>
+                        <select id="admission_status" name="admission_status">
+                            <option value="Pending" selected>Pending</option>
+                            <option value="Joined">Joined</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents -->
+            <div class="section">
+                <h2>Document Uploads</h2>
+                <div class="grid">
+                    <div class="field">
+                        <label for="tc">Transfer Certificate (TC)</label>
+                        <input type="file" id="tc" name="tc" accept=".pdf,.jpg,.png">
+                    </div>
+                    <div class="field">
+                        <label for="studyCert">Study Certificate</label>
+                        <input type="file" id="studyCert" name="studyCert" accept=".pdf,.jpg,.png">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Info -->
+            <div class="section">
+                <h2>Health Record</h2>
+                <div class="grid">
+                    <div class="field">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" name="height" min="0" max="300">
+                    </div>
+                    <div class="field">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" min="0" max="200">
+                    </div>
+                    <div class="field">
+                        <label for="health_problem">Any Health Problem?</label>
+                        <select id="health_problem" name="health_problem">
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="field full" id="healthDetailField" style="display:none;">
+                        <label for="health_issue_details">Health Issue Details</label>
+                        <textarea id="health_issue_details" name="health_issue_details"
+                            placeholder="Describe the health issue…"></textarea>
+                    </div>
+                    <div class="field full" id="medicalDocField" style="display:none;">
+                        <label for="medicalDocs">Medical Documents</label>
+                        <input type="file" id="medicalDocs" name="medicalDocs" accept=".pdf,.jpg,.png">
+                    </div>
+                    <div class="field">
+                        <label for="physically_disabled">Physically Disabled?</label>
+                        <select id="physically_disabled" name="physically_disabled">
+                            <option value="No" selected>No</option>
+                            <option value="Yes">Yes</option>
+                        </select>
+                    </div>
+                    <div class="field full" id="disabilityField" style="display:none;">
+                        <label for="disability_details">Disability Details</label>
+                        <textarea id="disability_details" name="disability_details"
+                            placeholder="Describe the disability…"></textarea>
+                    </div>
+                    <div class="field full" id="disabilityDocField" style="display:none;">
+                        <label for="disabilityDocs">Disability Documents</label>
+                        <input type="file" id="disabilityDocs" name="disabilityDocs" accept=".pdf,.jpg,.png">
+                    </div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Admission Form</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+   
+    const hostname = window.location.hostname;
+
+        const API =
+            window.location.protocol.startsWith('http')
+                ? `http://${hostname}:8000`
+                : 'http://10.20.66.148:8000';
+
+        let allStudents = [];
+
+        // Set today as default date
+        document.getElementById('admission_date').valueAsDate = new Date();
+
+        // Language duplicate check
+        const fl = document.getElementById('first_language');
+        const sl = document.getElementById('second_language');
+        function checkLang() {
+            if (fl.value && sl.value && fl.value === sl.value) {
+                showToast('First and Second Language cannot be the same!', 'error');
+                sl.value = '';
+            }
+        }
+        fl.addEventListener('change', checkLang);
+        sl.addEventListener('change', checkLang);
+
+        // Test performance toggle
+        document.getElementById('test_status').addEventListener('change', e => {
+            const pf = document.getElementById('testPerfField');
+            const tp = document.getElementById('test_performance');
+            if (e.target.value === 'Qualified') {
+                pf.style.display = 'flex';
+                tp.required = true;
+            } else {
+                pf.style.display = 'none';
+                tp.required = false;
+                tp.value = '';
+            }
+        });
+
+        // Health problem toggle
+        document.getElementById('health_problem').addEventListener('change', e => {
+            const show = e.target.value === 'Yes';
+            document.getElementById('healthDetailField').style.display = show ? 'flex' : 'none';
+            document.getElementById('medicalDocField').style.display = show ? 'flex' : 'none';
+            document.getElementById('health_issue_details').required = show;
+        });
+
+        // Disability toggle
+        document.getElementById('physically_disabled').addEventListener('change', e => {
+            const show = e.target.value === 'Yes';
+            document.getElementById('disabilityField').style.display = show ? 'flex' : 'none';
+            document.getElementById('disabilityDocField').style.display = show ? 'flex' : 'none';
+            document.getElementById('disability_details').required = show;
+        });
+
+        // Aadhaar – digits only
+        document.getElementById('aadhaar').addEventListener('input', e => {
+            e.target.value = e.target.value.replace(/\D/g, '').slice(0, 12);
+        });
+
+        // Toast helper
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = type === 'success' ? 'toast-success' : 'toast-error';
+            t.style.display = 'block';
+            setTimeout(() => { t.style.display = 'none'; }, 5000);
+        }
+
+        // Form submit
+        document.getElementById('admissionForm').addEventListener('submit', async e => {
+            e.preventDefault();
+            if (!e.target.checkValidity()) { e.target.reportValidity(); return; }
+
+            const aadhaar = document.getElementById('aadhaar').value;
+            if (aadhaar.length !== 12) {
+                showToast('Aadhaar must be exactly 12 digits', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.textContent = 'Submitting…';
+
+            try {
+                const fd = new FormData(e.target);
+                const res = await fetch(`${API}/submit/`, { method: 'POST', body: fd });
+                const data = await res.json();
+
+                if (res.ok) {
+                    showToast(`✅ Admission Successful! Admission No: ${data.admission_number} | Login: ${data.username} / ${data.password}`, 'success');
+                    e.target.reset();
+                    document.getElementById('admission_date').valueAsDate = new Date();
+                    document.getElementById('testPerfField').style.display = 'none';
+                    document.getElementById('healthDetailField').style.display = 'none';
+                    document.getElementById('medicalDocField').style.display = 'none';
+                    document.getElementById('disabilityField').style.display = 'none';
+                    document.getElementById('disabilityDocField').style.display = 'none';
+                } else {
+                    const msg = typeof data.detail === 'string' ? data.detail : JSON.stringify(data.detail);
+                    showToast('Error: ' + msg, 'error');
+                }
+            } catch (err) {
+                showToast('❌ Cannot connect to server. Make sure backend is running at localhost:8000', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Submit Admission Form';
+            }
+        });
+    </script>
+</body>
+
+</html>
